@@ -1,17 +1,63 @@
 <html>
     <head>
-        <title>Books</title>
+        <title>Phones</title>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
 
 
     </head>
     <body>
+        
+        <table class = "table" table  border ="1" >
+        
+            <tr>
+                <th>id</th>
+                <th>Make</th>
+                <th>Model</th>
+                <th>Price</th>
+                <th>Update</th>
+                <th>Delete</th>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>Samsung</td>
+                <td>S20</td>
+                <td>700</td>
+                <td><button>update</button></td>
+                <td><button>delete</button></td>
+            </tr>
+        </table>
+        
+        
+        
+        <h2>
+            <span style="display:none">update this</span> Phones
+        </h2>
+        
+        <div id = "myform">
+            id <input type="text"  id ="id"/><br/>
+            Make <input type="text" id="Make"/><br/>
+            Model <input type="text" id="Model"/><br/>
+            Price <input type="text" id="Price"/><br/>
+            Select<select name ="status">
+                <option value="instock">in stock</option>
+                <option value="outstock">out of stock</option>
+                <option value="other">other</option>
+            </select><br/>
+               
+            <button >Create</button>      
+               
+        </div>
+
+        <script>
+            console.log("hello")
+        </script>
+    </body>
      
     <script>
 
         function getAll(callback){
             $.ajax({
-                "url": "//http://andrewbeatty1.pythonanywhere.com/books",
+                "url": "//http://127.0.0.1:5000/phones",
                 "method": "GET",
                 "data": "",
                 "dataType": "JSON",

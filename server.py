@@ -2,7 +2,14 @@ from flask import Flask, url_for, redirect,request, jsonify, abort
 
 from PhonesDAO import phoneDAO
 
+from flask import Flask
+from flask_cors import CORS
+
+
+
+
 app = Flask(__name__, static_url_path='', static_folder='staticpages')
+CORS(app)
 
 """ phones=[
     {"id": 1, "Make": "Samsung", "Model": "s20", "Price": 500},
@@ -17,6 +24,7 @@ def index():
         return "Hello World"
 
 @app.route('/phones')
+
 def getAll():
     results = phoneDAO.getAll()
     return jsonify(results)
@@ -33,21 +41,25 @@ def findById(id):
 # Create
 @app.route('/phones', methods=['POST'])
 def create():
-
-    if not request.json:
+    if not request.json or 'Make' not in request.json or 'Model' not in request.json or 'Price' not in request.json:
         abort(400)
 
-    phone = {
-        "Make": request.json["Make"],
-        "Model": request.json["Model"],
-        "Price": request.json["Price"]
+    make = request.json['Make']
+    model = request.json['Model']
+    price = request.json['Price']
+
+    # Perform validation on make, model, and price if needed
+
+    new_id = phoneDAO.create(make, model, price)
+
+    new_phone = {
+        "id": new_id,
+        "Make": make,
+        "Model": model,
+        "Price": price
     }
-    values =(phone['Make'],phone['Model'],phone['Price'])
-    newId = phoneDAO.create(values)
-    phone['id'] = newId
-    return jsonify(phone)
 
-
+    return jsonify(new_phone)
 
 #update
 #curl -X PUT -d "{\"Make\":\"Nokia\", \"Model\":\"A54\", \"Price\":600}" -H "content-type:application/json" http://127.0.0.1:5000/phones/1

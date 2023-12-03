@@ -15,27 +15,32 @@ class PhoneDAO:
 
     def getcursor(self): 
         self.connection = mysql.connector.connect(
-            host=       self.host,
-            user=       self.user,
-            password=   self.password,
-            database=   self.database,
+            host=self.host,
+            user=self.user,
+            password=self.password,
+            database=self.database,
         )
         self.cursor = self.connection.cursor()
         return self.cursor
 
     def closeAll(self):
-        self.connection.close()
-        self.cursor.close()
-         
-    def create(self, values):
-        cursor = self.getcursor()
-        sql="insert into phone (Make, Model, Price) values (%s,%s,%s)"
-        cursor.execute(sql, values)
+        if self.connection is not None:
+            self.connection.close()
+        if self.cursor is not None:
+            self.cursor.close()
 
+    def create(self, make, model, price):
+        sql = "INSERT INTO phone (Make, Model, Price) VALUES (%s, %s, %s)"
+        values = (make, model, price)
+
+        cursor = self.getcursor()
+        cursor.execute(sql, values)
         self.connection.commit()
-        newid = cursor.lastrowid
-        self.closeAll()
-        return newid
+
+        new_id = cursor.lastrowid
+        cursor.close()
+
+        return new_id
 
     def getAll(self):
         cursor = self.getcursor()

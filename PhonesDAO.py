@@ -1,3 +1,5 @@
+
+# Import Packages
 import mysql.connector
 import dbconfig as cfg
 

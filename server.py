@@ -1,11 +1,8 @@
+# Import packages
 from flask import Flask, url_for, redirect,request, jsonify, abort
-
 from PhonesDAO import phoneDAO
-
 from flask import Flask
 from flask_cors import CORS
-
-
 
 
 app = Flask(__name__, static_url_path='', static_folder='staticpages')

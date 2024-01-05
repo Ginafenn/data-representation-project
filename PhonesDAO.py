@@ -3,6 +3,7 @@
 import mysql.connector
 import dbconfig as cfg
 
+
 # Using the variables from dbconfig.py
 
 class PhoneDAO:

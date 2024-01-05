@@ -2,11 +2,61 @@
     <head>
         <title>Phones</title>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                margin: 20px;
+            }
+    
+            h2 {
+                color: #333;
+            }
+    
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 20px;
+            }
+    
+            th, td {
+                border: 1px solid #ddd;
+                padding: 8px;
+                text-align: left;
+            }
+    
+            th {
+                background-color: #f2f2f2;
+            }
+    
+            button {
+                padding: 5px 10px;
+                background-color: #4CAF50;
+                color: white;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+            }
+    
+            button:hover {
+                background-color: #45a049;
+            }
+    
+            #myform {
+                margin-top: 20px;
+                display: none;
+            }
+    
+            input, select {
+                margin-bottom: 10px;
+            }
+        </style>
 
     </head>
     <body>
-        
+        <div class="button-container">
+            <button id="button-showCreate" onclick="showCreate()">Create a phone</button><br/><br/>
+        </div>
+        <div>
         <table class = "table" table  border ="1" >
         
             <tr>
@@ -27,26 +77,54 @@
             </tr>
         </table>
         
-        
+        </div>  
         
         <h2>
             <span style="display:none">update this</span> Phones
         </h2>
         
-        <div id = "myform">
-            id <input type="text"  id ="id"/><br/>
-            Make <input type="text" id="Make"/><br/>
-            Model <input type="text" id="Model"/><br/>
-            Price <input type="text" id="Price"/><br/>
-            Select<select name ="status">
-                <option value="instock">in stock</option>
-                <option value="outstock">out of stock</option>
-                <option value="other">other</option>
-            </select><br/>
-               
-            <button >Create</button>      
-               
+        <div class="form-container" style="display:none" id="myformCreate">
+            <h3>Create a Phone</h3>
+            <label for="make">Make:</label>
+            <input type="text" id="make" name="make" /><br />
+        
+            <label for="model">Model:</label>
+            <input type="text" id="model" name="model" /><br />
+        
+            <label for="price">Price:</label>
+            <input type="text" id="price" name="price" /><br />
+        
+
+        
+            <button onclick="createPhone()">Create</button>
         </div>
+        
+        <div class="form-container" style="display:none" id="myformUpdate">
+            <h3>Update Phone</h3>
+            <label for="updateMake">Make:</label>
+            <input type="text" id="updateMake" name="updateMake" /><br />
+        
+            <label for="updateModel">Model:</label>
+            <input type="text" id="updateModel" name="updateModel" /><br />
+        
+            <label for="updatePrice">Price:</label>
+            <input type="text" id="updatePrice" name="updatePrice" /><br />
+        
+
+        
+            <button onclick="updatePhone()">Update</button>
+        </div>
+        <script>
+            function showCreate() {
+                var myformCreate = document.getElementById('myformCreate');
+                if (myformCreate.style.display === 'none' || myformCreate.style.display === '') {
+                    myformCreate.style.display = 'block';
+                } else {
+                    myformCreate.style.display = 'none';
+                }
+            }
+        </script>
+               
 
         <script>
             console.log("hello")
@@ -57,7 +135,7 @@
 
         function getAll(callback){
             $.ajax({
-                "url": "//http://127.0.0.1:5000/phones",
+                "url": "http://127.0.0.1:5000/phones",
                 "method": "GET",
                 "data": "",
                 "dataType": "JSON",
@@ -76,6 +154,65 @@
             console.log(result)
         }
         getAll(processGetAll)
+
+        function createPhone() {
+            var make = $("#make").val();
+            var model = $("#model").val();
+            var price = $("#price").val();
+            var status = $("select[name='status']").val();
+
+            var phoneData = {
+                "Make": make,
+                "Model": model,
+                "Price": price,
+                "Status": status
+            };
+
+            console.log("Phone data:", phoneData);  // Log the phone data
+
+            // AJAX request
+            $.ajax({
+                url: 'http://127.0.0.1:5000/phones',
+                method: 'POST',
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify(phoneData),
+                success: function (response) {
+                    // Handle success
+                    console.log('Phone created successfully:', response);
+                },
+                error: function (xhr, status, error) {
+                    // Handle error
+                    console.error('Error creating phone:', status, error);
+                }
+            });
+}
+
+    function updateTable() {
+        // Fetch updated data from the server
+        getAll(function (result) {
+            // Assuming result is an array of phone objects
+
+            // Clear the existing table content
+            $('#phoneTable tbody').empty();
+
+            // Populate the table with the updated data
+            result.forEach(function (phone) {
+                var row = `<tr>
+                                <td>${phone.id}</td>
+                                <td>${phone.Make}</td>
+                                <td>${phone.Model}</td>
+                                <td>${phone.Price}</td>
+                                <td><button onclick="updatePhone(${phone.id})">Update</button></td>
+                                <td><button onclick="deletePhone(${phone.id})">Delete</button></td>
+                        </tr>`;
+                $('#phoneTable tbody').append(row);
+            });
+        });
+    }
+
+
+
+  
     </script>      
 
     </body>

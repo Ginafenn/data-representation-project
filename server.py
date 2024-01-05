@@ -1,3 +1,6 @@
+# Project
+# Author: Regina Fennessy
+
 # Import packages
 from flask import Flask, url_for, redirect,request, jsonify, abort
 from PhonesDAO import phoneDAO

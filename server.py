@@ -1,5 +1,5 @@
 # Project
-# Author: Regina Fennessy
+
 
 # Import packages
 from flask import Flask, url_for, redirect,request, jsonify, abort
@@ -21,9 +21,9 @@ nextId=4 """
 @app.route('/')
 
 def index():
-        return "Hello World"
+        return "Phones"
 
-@app.route('/phones')
+@app.route('/phones', methods=['GET', 'POST'])
 
 def getAll():
     results = phoneDAO.getAll()
@@ -63,7 +63,7 @@ def create():
 
 #update
 #curl -X PUT -d "{\"Make\":\"Nokia\", \"Model\":\"A54\", \"Price\":600}" -H "content-type:application/json" http://127.0.0.1:5000/phones/1
-@app.route('/phones/<int:id>', methods=['PUT'])
+@app.route('/phones/<int:id>', methods=['GET', 'PUT', 'DELETE'])
 def update(id):
 
     foundphone = phoneDAO.findByID(id)

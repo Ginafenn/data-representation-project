@@ -33,17 +33,20 @@ class PhoneDAO:
             self.cursor.close()
 
     def create(self, make, model, price):
-        sql = "INSERT INTO phone (Make, Model, Price) VALUES (%s, %s, %s)"
-        values = (make, model, price)
+        try:
+            cursor = self.getcursor()
+            sql = "INSERT INTO phone (Make, Model, Price) VALUES (%s, %s, %s)"
+            values = (make, model, price)
+            cursor.execute(sql, values)
 
-        cursor = self.getcursor()
-        cursor.execute(sql, values)
-        self.connection.commit()
-
-        new_id = cursor.lastrowid
-        cursor.close()
-
-        return new_id
+            self.connection.commit()
+            new_id = cursor.lastrowid
+            self.closeAll()
+            return new_id
+        except mysql.connector.Error as err:
+            print(f"Error: {err}")
+            self.closeAll()
+            return None
 
     def getAll(self):
         cursor = self.getcursor()
@@ -122,22 +125,3 @@ phoneDAO = PhoneDAO()
 
 
 
-""" db = mysql.connector.connect(
-    host=cfg.host,
-    user=cfg.user,
-    password=cfg.password,
-    database=cfg.database
-)
-
-cursor = db.cursor()
-
-sql="insert into phone (Make, Model, Price) values (%s,%s,%s)"
-values = ("iPhone","11",1050)
-
-cursor.execute(sql, values)
-
-db.commit()
-print("1 record inserted, ID:", cursor.lastrowid)
-
-cursor.close()
-db.close() """

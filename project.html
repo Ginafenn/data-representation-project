@@ -126,9 +126,9 @@
         </script>
                
 
-        <script>
+<!--         <script>
             console.log("hello")
-        </script>
+        </script> -->
     </body>
      
     <script>
@@ -185,9 +185,9 @@
                     console.error('Error creating phone:', status, error);
                 }
             });
-}
+    }
 
-    function updateTable() {
+     /* function updateTable() {
         // Fetch updated data from the server
         getAll(function (result) {
             // Assuming result is an array of phone objects
@@ -208,14 +208,29 @@
                 $('#phoneTable tbody').append(row);
             });
         });
+    }  */
+
+    function updateBookAjax(phone){
+        
+        console.log(JSON.stringify(phone));
+        $.ajax({
+            "url": "http://127.0.0.1:5000/phones/"+encodeURI(phone.id),
+            "method":"PUT",
+            "data":JSON.stringify(phone),
+            "dataType": "JSON",
+            contentType: "application/json; charset=utf-8",
+            "success":function(result){
+               // console.log(result);
+                  
+            },
+            "error":function(xhr,status,error){
+                console.log("error: "+status+" msg:"+error);
+            }
+        });
     }
-
-
-
   
     </script>      
 
     </body>
 
 </html>
-

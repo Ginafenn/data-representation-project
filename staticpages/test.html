@@ -114,6 +114,8 @@
         
             <button onclick="updatePhone()">Update</button>
         </div>
+
+
         <script>
             function showCreate() {
                 var myformCreate = document.getElementById('myformCreate');
@@ -133,69 +135,92 @@
      
     <script>
 
-        function getAll(callback){
-            $.ajax({
-                "url": "http://127.0.0.1:5000/phones",
-                "method": "GET",
-                "data": "",
-                "dataType": "JSON",
-                contentType: "application/json; charset=utf-8",
-                "success":function(result){
-                    //console.log(result);
-                    callback(result)
-                },
-                "error":function(xhr,status,error){
-                    console.log("error: "+status+" msg:"+error);
-                }
-            });
-        }
-        function processGetAll(result){
-            console.log("in process")
-            console.log(result)
-        }
-        getAll(processGetAll)
+function getAll(callback){
+        $.ajax({
+            "url": "http://127.0.0.1:5000/phones",
+            "method": "GET",
+            "data": "",
+            "dataType": "JSON",
+            contentType: "application/json; charset=utf-8",
+            "success":function(result){
+                callback(result);
+            },
+            "error":function(xhr,status,error){
+                console.log("error: "+status+" msg:"+error);
+            }
+        });
+    }
 
-        function createPhone() {
-            var make = $("#make").val();
-            var model = $("#model").val();
-            var price = $("#price").val();
-            var status = $("select[name='status']").val();
+    function processGetAll(result){
+        console.log("in process");
+        console.log(result);
+    }
 
-            var phoneData = {
-                "Make": make,
-                "Model": model,
-                "Price": price,
-                "Status": status
-            };
+    getAll(processGetAll);
 
-            console.log("Phone data:", phoneData);  // Log the phone data
+    function createPhone() {
+        var make = $("#make").val();
+        var model = $("#model").val();
+        var price = $("#price").val();
+        var status = $("select[name='status']").val();
 
-            // AJAX request
-            $.ajax({
-                url: 'http://127.0.0.1:5000/phones',
-                method: 'POST',
-                contentType: 'application/json; charset=utf-8',
-                data: JSON.stringify(phoneData),
-                success: function (response) {
-                    // Handle success
-                    console.log('Phone created successfully:', response);
-                },
-                error: function (xhr, status, error) {
-                    // Handle error
-                    console.error('Error creating phone:', status, error);
-                }
-            });
-}
+        var phoneData = {
+            "Make": make,
+            "Model": model,
+            "Price": price,
+            "Status": status,
+            "success": function (response) {
+                console.log('Phone created successfully:', response);
+                alert('Phone created successfully!');
+                updateTable(); // After creating a phone, update the table.
+            },
+            error: function (xhr, status, error) {
+                console.error('Error creating phone:', status, error);
+                alert('Error creating phone. Please try again.');
+            }
+
+        };
+
+        console.log("Phone data:", phoneData);
+
+        $.ajax({
+            url: 'http://127.0.0.1:5000/phones',
+            method: 'POST',
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify(phoneData),
+            success: function (response) {
+                console.log('Phone created successfully:', response);
+                updateTable(); // After creating a phone, update the table.
+            },
+            error: function (xhr, status, error) {
+                console.error('Error creating phone:', status, error);
+            }
+        });
+    }
+
+    function updatePhone(phoneId) {
+        // Logic to update a specific phone (you need to implement this)
+        console.log("Update phone with ID:", phoneId);
+    }
+
+    function deletePhone(phoneId) {
+        $.ajax({
+            url: `http://127.0.0.1:5000/phones/${phoneId}`,
+            method: 'DELETE',
+            success: function (response) {
+                console.log('Phone deleted successfully:', response);
+                updateTable(); // After deleting a phone, update the table.
+            },
+            error: function (xhr, status, error) {
+                console.error('Error deleting phone:', status, error);
+            }
+        });
+    }
 
     function updateTable() {
-        // Fetch updated data from the server
         getAll(function (result) {
-            // Assuming result is an array of phone objects
-
-            // Clear the existing table content
             $('#phoneTable tbody').empty();
 
-            // Populate the table with the updated data
             result.forEach(function (phone) {
                 var row = `<tr>
                                 <td>${phone.id}</td>
@@ -210,11 +235,8 @@
         });
     }
 
+</script>      
 
-
-  
-    </script>      
-
-    </body>
+</body>
 
 </html>

@@ -4,7 +4,7 @@ import mysql.connector
 import dbconfig as cfg
 
 
-# Using the variables from dbconfig.py
+# linking to the dbconfig.py for credentials
 
 class PhoneDAO:
     connection = None

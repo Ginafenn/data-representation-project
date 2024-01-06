@@ -19,6 +19,44 @@
         button {
             margin-right: 5px;
         }
+
+        h1, h2 {
+            color: #007bff; /* Primary blue color */
+        }
+
+        thead {
+            background-color: #f8f9fa; /* Light gray background */
+        }
+
+        .btn-primary {
+            background-color: #007bff; /* Primary blue color */
+            border-color: #007bff;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+            border-color: #0056b3;
+        }
+
+        .btn-success {
+            background-color: #28a745; /* Success green */
+            border-color: #28a745;
+        }
+
+        .btn-success:hover {
+            background-color: #218838; /* Darker green on hover */
+            border-color: #218838;
+        }
+
+        .btn-warning {
+            background-color: #ffc107; /* Warning yellow */
+            border-color: #ffc107;
+        }
+
+        .btn-warning:hover {
+            background-color: #e0a800; /* Darker yellow on hover */
+            border-color: #e0a800;
+        }
     </style>
 </head>
 
@@ -108,7 +146,6 @@
     }
     function doCreate(){
         var form = document.getElementById('createUpdateForm')
-
         var phone = {}
        
         phone.Make = form.querySelector('input[name="Make"]').value
@@ -273,7 +310,7 @@
     }
     function deletePhoneAjax(id){
         
-        //console.log(JSON.stringify('deleting '+id));
+        console.log(JSON.stringify('deleting '+id));
         $.ajax({
             "url": "http://127.0.0.1:5000/phones/"+encodeURI(id),
             "method":"DELETE",

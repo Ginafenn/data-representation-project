@@ -32,21 +32,22 @@ class PhoneDAO:
         if self.cursor is not None:
             self.cursor.close()
 
-    def create(self, make, model, price):
+    def create(self, values):
         try:
             cursor = self.getcursor()
-            sql = "INSERT INTO phone (Make, Model, Price) VALUES (%s, %s, %s)"
-            values = (make, model, price)
+            sql = "INSERT INTO phone (Make, Model, Price) values (%s, %s, %s)"
+            print(f"Executing SQL: {sql} with values: {values}")
             cursor.execute(sql, values)
 
             self.connection.commit()
             new_id = cursor.lastrowid
-            self.closeAll()
+            print(f"New phone record inserted with id: {new_id}")
             return new_id
         except mysql.connector.Error as err:
             print(f"Error: {err}")
-            self.closeAll()
             return None
+        finally:
+            self.closeAll()
 
     def getAll(self):
         cursor = self.getcursor()
@@ -84,12 +85,10 @@ class PhoneDAO:
         cursor = self.getcursor()
         sql="delete from phone where id = %s"
         values = (id,)
-
+        print(f"Executing SQL: {sql} with values: {values}")  # Debugging print statement
         cursor.execute(sql, values)
-
         self.connection.commit()
         self.closeAll()
-        
         print("delete done")
 
     def convertToDictionary(self, result):

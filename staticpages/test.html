@@ -1,149 +1,276 @@
-<html>
-    <head>
-        <title>Phones</title>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
-        <style>
-            body {
-                font-family: Arial, sans-serif;
-                margin: 20px;
-            }
-    
-            h2 {
-                color: #333;
-            }
-    
-            table {
-                width: 100%;
-                border-collapse: collapse;
-                margin-top: 20px;
-            }
-    
-            th, td {
-                border: 1px solid #ddd;
-                padding: 8px;
-                text-align: left;
-            }
-    
-            th {
-                background-color: #f2f2f2;
-            }
-    
-            button {
-                padding: 5px 10px;
-                background-color: #4CAF50;
-                color: white;
-                border: none;
-                border-radius: 4px;
-                cursor: pointer;
-            }
-    
-            button:hover {
-                background-color: #45a049;
-            }
-    
-            #myform {
-                margin-top: 20px;
-                display: none;
-            }
-    
-            input, select {
-                margin-bottom: 10px;
-            }
-        </style>
+<!DOCTYPE html>
+<html lang="en">
 
-    </head>
-    <body>
-        <div class="button-container">
-            <button id="button-showCreate" onclick="showCreate()">Create a phone</button><br/><br/>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Phones</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <style>
+        #createUpdateForm {
+            display: none;
+        }
+
+        #phoneTable {
+            margin-top: 20px;
+        }
+
+        button {
+            margin-right: 5px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container mt-5">
+        <h1 class="text-center">Phones</h1>
+        <div class="text-right mb-3">
+            <button id="showCreateButton" class="btn btn-primary" onclick="showCreate()">Create</button>
         </div>
-        <div>
-        <table class = "table" table  border ="1" >
-        
-            <tr>
-                <th>id</th>
-                <th>Make</th>
-                <th>Model</th>
-                <th>Price</th>
-                <th>Update</th>
-                <th>Delete</th>
-            </tr>
-            <tr>
-                <td>3</td>
-                <td>Samsung</td>
-                <td>S20</td>
-                <td>700</td>
-                <td><button>update</button></td>
-                <td><button>delete</button></td>
-            </tr>
+
+        <table class="table table-striped" id="phoneTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Make</th>
+                    <th>Model</th>
+                    <th>Price</th>
+                    <th>Update</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+            </tbody>
         </table>
-        
-        </div>  
-        
-        <h2>
-            <span style="display:none">update this</span> Phones
-        </h2>
-        
-        <div class="form-container" style="display:none" id="myformCreate">
-            <h3>Create a Phone</h3>
-            <label for="make">Make:</label>
-            <input type="text" id="make" name="make" /><br />
-        
-            <label for="model">Model:</label>
-            <input type="text" id="model" name="model" /><br />
-        
-            <label for="price">Price:</label>
-            <input type="text" id="price" name="price" /><br />
-        
 
-        
-            <button onclick="createPhone()">Create</button>
+        <div id='createUpdateForm'>
+            <h2><span id="createLabel">Create a</span> <span id="updateLabel">Update</span> Phone</h2>
+            <input type="hidden" name="id" />
+            <div class="form-group">
+                <label for="Make">Make</label>
+                <input type="text" class="form-control" id="Make" name="Make" required>
+
+            </div>
+            <div class="form-group">
+                <label for="Model">Model</label>
+                <input type="text" class="form-control" id="Model" name="Model" required>
+
+            </div>
+            <div class="form-group">
+                <label for="Price">Price</label>
+                <input type="number" class="form-control" id="Price" name="Price" required>
+
+            </div>
+            <button id="doCreateButton" class="btn btn-success" onclick="doCreate()">Create</button>
+            <button id="doUpdateButton" class="btn btn-warning" onclick="doUpdate()">Update</button>
+            </div>
+
         </div>
-        
-        <div class="form-container" style="display:none" id="myformUpdate">
-            <h3>Update Phone</h3>
-            <label for="updateMake">Make:</label>
-            <input type="text" id="updateMake" name="updateMake" /><br />
-        
-            <label for="updateModel">Model:</label>
-            <input type="text" id="updateModel" name="updateModel" /><br />
-        
-            <label for="updatePrice">Price:</label>
-            <input type="text" id="updatePrice" name="updatePrice" /><br />
-        
-
-        
-            <button onclick="updatePhone()">Update</button>
-        </div>
-
-
-        <script>
-            function showCreate() {
-                var myformCreate = document.getElementById('myformCreate');
-                if (myformCreate.style.display === 'none' || myformCreate.style.display === '') {
-                    myformCreate.style.display = 'block';
-                } else {
-                    myformCreate.style.display = 'none';
-                }
-            }
-        </script>
-               
-
-        <script>
-            console.log("hello")
-        </script>
-    </body>
-     
+    </div>
     <script>
+    function showCreate(){
+        document.getElementById('showCreateButton').style.display="none"
+        document.getElementById('phoneTable').style.display="none"
+        document.getElementById('createUpdateForm').style.display="block"
 
-function getAll(callback){
+        document.getElementById('createLabel').style.display="inline"
+        document.getElementById('updateLabel').style.display="none"
+
+        document.getElementById('doCreateButton').style.display="block"
+        document.getElementById('doUpdateButton').style.display="none"
+
+    }
+    function showViewAll(){
+        document.getElementById('showCreateButton').style.display="block"
+        document.getElementById('phoneTable').style.display="block"
+        document.getElementById('createUpdateForm').style.display="none"
+    }
+    function showUpdate(buttonElement){
+        document.getElementById('showCreateButton').style.display="none"
+        document.getElementById('phoneTable').style.display="none"
+        document.getElementById('createUpdateForm').style.display="block"
+
+        document.getElementById('createLabel').style.display="none"
+        document.getElementById('updateLabel').style.display="inline"
+
+        document.getElementById('doCreateButton').style.display="none"
+        document.getElementById('doUpdateButton').style.display="block"
+
+
+        var rowElement = buttonElement.parentNode.parentNode
+       
+        
+        var phone = getPhoneFromRow(rowElement)
+        populateFormWithPhone(phone)
+    }
+    function doCreate(){
+        var form = document.getElementById('createUpdateForm')
+
+        var phone = {}
+       
+        phone.Make = form.querySelector('input[name="Make"]').value
+        phone.Model = form.querySelector('input[name="Model"]').value
+        phone.Price = form.querySelector('input[name="Price"]').value
+        console.log(JSON.stringify(phone))
+        createPhoneAjax(phone)
+        
+        
+    }
+    function doUpdate(){
+        var phone = getPhoneFromForm();
+        var rowElement = document.getElementById(phone.id);
+        updatePhoneAjax(phone);
+        setPhoneInRow(rowElement,phone);
+       
+        clearForm();
+        showViewAll();
+    }
+    function doDelete(r){
+        var tableElement = document.getElementById('phoneTable');
+        var rowElement = r.parentNode.parentNode;
+        var phoneId = rowElement.getAttribute("id");
+        
+        deletePhoneAjax(phoneId, function(success) {
+            if(success) {
+                tableElement.deleteRow(rowElement.rowIndex);
+            } else {
+                console.log("Failed to delete phone with ID:", phoneId);
+            }
+        });
+    }
+
+    function addPhoneToTable(phone) {
+        var tableElement = document.getElementById('phoneTable');
+        var rowElement = tableElement.insertRow(-1);
+
+        rowElement.setAttribute('id', phone.id);
+
+        var cell1 = rowElement.insertCell(0);
+        cell1.innerHTML = phone.id;
+
+        var cell2 = rowElement.insertCell(1);
+        cell2.innerHTML = phone.Make;
+
+        var cell3 = rowElement.insertCell(2);
+        cell3.innerHTML = phone.Model;
+
+        var cell4 = rowElement.insertCell(3);
+        cell4.innerHTML = phone.Price;
+
+        var cell5 = rowElement.insertCell(4);
+        cell5.innerHTML = '<button onclick="showUpdate(this)">Update</button>';
+
+        var cell6 = rowElement.insertCell(5);
+        cell6.innerHTML = '<button onclick="doDelete(this)">Delete</button>';
+    }
+
+
+    function clearForm(){
+        var form = document.getElementById('createUpdateForm')
+
+        form.querySelector('input[name="Make"]').value=''
+        form.querySelector('input[name="Model"]').value=''
+        form.querySelector('input[name="Price"]').value=''
+    }
+    function getPhoneFromRow(rowElement){
+        var phone ={}
+        phone.id  = rowElement.getAttribute('id')
+        phone.Make = rowElement.cells[1].firstChild.textContent
+        phone.Model = rowElement.cells[2].firstChild.textContent
+        phone.Price = parseInt(rowElement.cells[3].firstChild.textContent,10)
+        return phone
+    }
+    function setPhoneInRow(rowElement, phone){
+        rowElement.cells[0].firstChild.textContent= phone.id  
+        rowElement.cells[1].firstChild.textContent= phone.Make 
+        rowElement.cells[2].firstChild.textContent= phone.Model
+        rowElement.cells[3].firstChild.textContent= phone.Price
+    }
+    function populateFormWithPhone(phone){
+        var form = document.getElementById('createUpdateForm')
+        form.querySelector('input[name="id"]').disabled = true
+
+        form.querySelector('input[name="id"]').value  = phone.id
+        form.querySelector('input[name="Make"]').value= phone.Make
+        form.querySelector('input[name="Model"]').value= phone.Model
+        form.querySelector('input[name="Price"]').value= phone.Price
+        return phone
+    }
+    function getPhoneFromForm(){
+        var form = document.getElementById('createUpdateForm')
+        var phone = {}
+        phone.id = form.querySelector('input[name="id"]').value
+        phone.Make = form.querySelector('input[name="Make"]').value
+        phone.Model = form.querySelector('input[name="Model"]').value
+        phone.Price = parseInt(form.querySelector('input[name="Price"]').value,10)
+        console.log(JSON.stringify(phone))
+        return phone
+    }
+    function getAllAjax(){
         $.ajax({
             "url": "http://127.0.0.1:5000/phones",
-            "method": "GET",
-            "data": "",
+            "method":"GET",
+            "data":"",
+            "dataType": "JSON",
+            "success":function(result){
+                //console.log(result);
+                for (phone of result){
+                    addPhoneToTable(phone);
+                }
+                
+            },
+            "error":function(xhr,status,error){
+                console.log("error: "+status+" msg:"+error);
+            }
+        });
+
+    }
+    function createPhoneAjax(phone) {
+        console.log(JSON.stringify(phone));
+        $.ajax({
+            url: "http://127.0.0.1:5000/phones",
+            method: "POST",
+            data: JSON.stringify(phone),
+            dataType: "JSON",
+            contentType: "application/json; charset=utf-8",
+            success: function(result) {
+                console.log("Response from server:", result); // Log the server response
+                
+                // Parse the ID as an integer with radix 10
+                phone.id = parseInt(result[0].id, 10);
+                
+                // Check if the parsed ID is a valid number
+                if (!isNaN(phone.id)) {
+                    addPhoneToTable(phone);
+                    clearForm();
+                    showViewAll();
+                } else {
+                    console.error("Invalid ID received:", result[0].id);
+                    // Handle the error as needed (e.g., show a message to the user)
+                }
+            },
+            error: function(error) {
+                console.error("Error creating phone:", error);
+                // Handle the error (e.g., show a message to the user)
+            }
+        });
+    }
+
+    function updatePhoneAjax(phone){
+        
+        console.log(JSON.stringify(phone));
+        $.ajax({
+            "url": "http://127.0.0.1:5000/phones/"+encodeURI(phone.id),
+            "method":"PUT",
+            "data":JSON.stringify(phone),
             "dataType": "JSON",
             contentType: "application/json; charset=utf-8",
             "success":function(result){
-                callback(result);
+               // console.log(result);
+                  
             },
             "error":function(xhr,status,error){
                 console.log("error: "+status+" msg:"+error);
@@ -151,92 +278,42 @@ function getAll(callback){
         });
     }
 
-    function processGetAll(result){
-        console.log("in process");
-        console.log(result);
+    function handleDeleteResponse(success) {
+        if (success) {
+            console.log('Delete operation successful.');
+            // Perform any additional actions if needed
+        } else {
+            console.log('Delete operation failed.');
+            // Handle error if needed
+        }
     }
 
-    getAll(processGetAll);
 
-    function createPhone() {
-        var make = $("#make").val();
-        var model = $("#model").val();
-        var price = $("#price").val();
-        var status = $("select[name='status']").val();
-
-        var phoneData = {
-            "Make": make,
-            "Model": model,
-            "Price": price,
-            "Status": status,
-            "success": function (response) {
-                console.log('Phone created successfully:', response);
-                alert('Phone created successfully!');
-                updateTable(); // After creating a phone, update the table.
-            },
-            error: function (xhr, status, error) {
-                console.error('Error creating phone:', status, error);
-                alert('Error creating phone. Please try again.');
-            }
-
-        };
-
-        console.log("Phone data:", phoneData);
-
+    function deletePhoneAjax(id, callback) {
         $.ajax({
-            url: 'http://127.0.0.1:5000/phones',
-            method: 'POST',
-            contentType: 'application/json; charset=utf-8',
-            data: JSON.stringify(phoneData),
-            success: function (response) {
-                console.log('Phone created successfully:', response);
-                updateTable(); // After creating a phone, update the table.
+            "url": "http://127.0.0.1:5000/phones",
+            "method": "DELETE",
+            "data": "",
+            "dataType": "JSON",
+            contentType: "application/json; charset=utf-8",
+            "success": function(result) {
+                if (callback) {
+                    callback(true);  // Call the callback function with success as true
+                }
             },
-            error: function (xhr, status, error) {
-                console.error('Error creating phone:', status, error);
+            "error": function(xhr, status, error) {
+                console.log("error: " + status + " msg:" + error);
+                if (callback) {
+                    callback(false);  // Call the callback function with success as false
+                }
             }
         });
     }
 
-    function updatePhone(phoneId) {
-        // Logic to update a specific phone (you need to implement this)
-        console.log("Update phone with ID:", phoneId);
-    }
 
-    function deletePhone(phoneId) {
-        $.ajax({
-            url: `http://127.0.0.1:5000/phones/${phoneId}`,
-            method: 'DELETE',
-            success: function (response) {
-                console.log('Phone deleted successfully:', response);
-                updateTable(); // After deleting a phone, update the table.
-            },
-            error: function (xhr, status, error) {
-                console.error('Error deleting phone:', status, error);
-            }
-        });
-    }
+    getAllAjax();
+  
 
-    function updateTable() {
-        getAll(function (result) {
-            $('#phoneTable tbody').empty();
-
-            result.forEach(function (phone) {
-                var row = `<tr>
-                                <td>${phone.id}</td>
-                                <td>${phone.Make}</td>
-                                <td>${phone.Model}</td>
-                                <td>${phone.Price}</td>
-                                <td><button onclick="updatePhone(${phone.id})">Update</button></td>
-                                <td><button onclick="deletePhone(${phone.id})">Delete</button></td>
-                        </tr>`;
-                $('#phoneTable tbody').append(row);
-            });
-        });
-    }
-
-</script>      
-
-</body>
-
+    
+    </script>
 </html>

@@ -1,11 +1,12 @@
 # Project
 
-
 # Import packages
 from flask import Flask, url_for, redirect,request, jsonify, abort
 from PhonesDAO import phoneDAO
-from flask import Flask
 from flask_cors import CORS
+import logging
+
+logging.basicConfig(level=logging.DEBUG)
 
 
 app = Flask(__name__, static_url_path='', static_folder='staticpages')
@@ -37,32 +38,32 @@ def findById(id):
 
     return jsonify(foundphone)
 
-#curl -X POST -H "content-type:application/json" -d "{\"Make\":\"Samsung\", \"Model\":\"A54\", \"Price\":600}" http://127.0.0.1:5000/phones
 # Create
 @app.route('/phones', methods=['POST'])
 def create():
-    if not request.json or 'Make' not in request.json or 'Model' not in request.json or 'Price' not in request.json:
+
+    if not request.json:
         abort(400)
-
-    make = request.json['Make']
-    model = request.json['Model']
-    price = request.json['Price']
-
-    # Perform validation on make, model, and price if needed
-
-    new_id = phoneDAO.create(make, model, price)
-
-    new_phone = {
-        "id": new_id,
-        "Make": make,
-        "Model": model,
-        "Price": price
+    # Checking 
+    phone = {
+        "Make": request.json['Make'],
+        "Model": request.json['Model'],
+        "Price": request.json['Price'],
     }
+    values =(phone['Make'],phone['Model'],phone['Price'])
 
-    return jsonify(new_phone)
+    new_id = phoneDAO.create(values)
+    if new_id is not None:
+        
+        phone['id'] = new_id
+        logging.debug(f"New phone created with ID: {new_id}")
+        return jsonify(phone), 201
+    else:
+        logging.error("Failed to create phone")
+        return jsonify({"error": "Failed to create phone"}), 500
+    
 
-#update
-#curl -X PUT -d "{\"Make\":\"Nokia\", \"Model\":\"A54\", \"Price\":600}" -H "content-type:application/json" http://127.0.0.1:5000/phones/1
+# update
 @app.route('/phones/<int:id>', methods=['GET', 'PUT', 'DELETE'])
 def update(id):
 
@@ -77,11 +78,11 @@ def update(id):
     if 'Price' in reqJson and type(reqJson['Price']) is not int:
         abort(400)
 
-    if 'title' in reqJson:
+    if 'Make' in reqJson:
         foundphone['Make'] = reqJson['Make']
-    if 'Author' in reqJson:
+    if 'Model' in reqJson:
         foundphone['Model'] = reqJson['Model']
-    if 'price' in reqJson:
+    if 'Price' in reqJson:
         foundphone['Price'] = reqJson['Price']
     values = (foundphone['Make'],foundphone['Model'],foundphone['Price'],foundphone['id'])
     phoneDAO.update(values)
@@ -89,7 +90,6 @@ def update(id):
 
 
 #delete
-# curl -X DELETE http://127.0.0.1:5000/phones/1
 @app.route('/phones/<int:id>', methods=['DELETE'])
 def delete(id):
     phoneDAO.delete(id)

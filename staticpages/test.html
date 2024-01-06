@@ -131,15 +131,9 @@
     function doDelete(r){
         var tableElement = document.getElementById('phoneTable');
         var rowElement = r.parentNode.parentNode;
-        var phoneId = rowElement.getAttribute("id");
-        
-        deletePhoneAjax(phoneId, function(success) {
-            if(success) {
-                tableElement.deleteRow(rowElement.rowIndex);
-            } else {
-                console.log("Failed to delete phone with ID:", phoneId);
-            }
-        });
+        var index = rowElement.rowIndex;
+        deletePhoneAjax(rowElement.getAttribute("id"));
+        tableElement.deleteRow(index);
     }
 
     function addPhoneToTable(phone) {
@@ -277,35 +271,21 @@
             }
         });
     }
-
-    function handleDeleteResponse(success) {
-        if (success) {
-            console.log('Delete operation successful.');
-            // Perform any additional actions if needed
-        } else {
-            console.log('Delete operation failed.');
-            // Handle error if needed
-        }
-    }
-
-
-    function deletePhoneAjax(id, callback) {
+    function deletePhoneAjax(id){
+        
+        //console.log(JSON.stringify('deleting '+id));
         $.ajax({
-            "url": "http://127.0.0.1:5000/phones",
-            "method": "DELETE",
-            "data": "",
+            "url": "http://127.0.0.1:5000/phones/"+encodeURI(id),
+            "method":"DELETE",
+            "data":"",
             "dataType": "JSON",
             contentType: "application/json; charset=utf-8",
-            "success": function(result) {
-                if (callback) {
-                    callback(true);  // Call the callback function with success as true
-                }
+            "success":function(result){
+                //console.log(result);
+                  
             },
-            "error": function(xhr, status, error) {
-                console.log("error: " + status + " msg:" + error);
-                if (callback) {
-                    callback(false);  // Call the callback function with success as false
-                }
+            "error":function(xhr,status,error){
+                console.log("error: "+status+" msg:"+error);
             }
         });
     }

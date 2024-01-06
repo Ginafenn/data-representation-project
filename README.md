@@ -19,7 +19,19 @@ A virtual environment is used by the following commands to create and activate t
 - .\venv\Scripts\activate.bat
 - Install Flask - pip install Flask
 
-Create a Database and select it for use using MySQL
+Installing MySQL Package
+- Go to MySQL official download page for Windows: MySQL Downloads.
+- MySQL Community Server section
+- Select the appropriate version 
+- Choose the installer that matches your system
+- Click the "Download" button
+- Run the installer and follow the on-screen instructions to install MySQL Server.
+
+Database creation
+- Open your terminal or command prompt and log in to the MySQL server using the command mysql -u username -p
+- Replace username with your MySQL username. You'll be prompted to enter the password for the user.
+- Create a new database with the CREATE DATABASE statement
+- Verify: You can verify that the database has been created using SHOW DATABASES; command
 
 
 ***

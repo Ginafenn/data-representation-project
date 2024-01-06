@@ -27,15 +27,13 @@ class PhoneDAO:
         return self.cursor
 
     def closeAll(self):
-        if self.connection is not None:
-            self.connection.close()
-        if self.cursor is not None:
-            self.cursor.close()
+        self.connection.close()
+        self.cursor.close()
 
     def create(self, values):
         try:
             cursor = self.getcursor()
-            sql = "INSERT INTO phone (Make, Model, Price) values (%s, %s, %s)"
+            sql = "insert into phone (Make, Model, Price) values (%s, %s, %s)"
             print(f"Executing SQL: {sql} with values: {values}")
             cursor.execute(sql, values)
 
